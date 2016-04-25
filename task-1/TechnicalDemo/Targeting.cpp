@@ -3,10 +3,6 @@
 #include "..\Engine\Window.h"
 #include "Targeting.h"
 
-#define TARGETING_WIDTH 30.f
-#define TARGETING_HEIGHT 15.f
-#define TARGETING_COLOR 0xff9dd855
-
 TDTargeting::TDTargeting():
 m_pVB(NULL)
 {

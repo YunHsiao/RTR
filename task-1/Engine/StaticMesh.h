@@ -8,6 +8,8 @@ public:
 	~CStaticMesh();
 	bool onInit(const char* strFilePath, D3DXVECTOR3& vPos, float fScale = 1.f, 
 		float fYaw = 0.f, float fPitch = 0.f, float fRoll = 0.f);
+	bool onInit(const char* strFilePath, D3DXVECTOR3& vPos, float fScale, 
+		D3DXVECTOR3& vRot, float fAngle);
 	// 作为骨骼模型子物体时使用
 	bool onInit(const char* strFilePath, ID3DXBuffer* pAdjacency, ID3DXBuffer* pBufferMaterial, 
 		DWORD dNumMaterial, ID3DXMesh* pStaticMesh, D3DXMATRIX* pMatParent);

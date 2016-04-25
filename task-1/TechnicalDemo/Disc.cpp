@@ -33,17 +33,17 @@ bool TDDisc::onInit(LPCTSTR strMesh)
 	m_vTexture.push_back(m_pTexture);
 	m_vNH.push_back(m_pNH);
 
-	CreateTextureFromFile("res\\effect\\rocks.jpg");
-	CreateTextureFromFile("res\\effect\\wall.jpg");
-	CreateTextureFromFile("res\\effect\\concrete.bmp");
-	CreateTextureFromFile("res\\effect\\wood.jpg");
+	if (!CreateTextureFromFile("res\\effect\\rocks.jpg")) return false;
+	if (!CreateTextureFromFile("res\\effect\\wall.jpg")) return false;
+	if (!CreateTextureFromFile("res\\effect\\concrete.bmp")) return false;
+	if (!CreateTextureFromFile("res\\effect\\wood.jpg")) return false;
 
-	CreateTextureFromFile("res\\effect\\rocksNH.tga", true);
-	CreateTextureFromFile("res\\effect\\wallNH.tga", true);
-	CreateTextureFromFile("res\\effect\\bumpNH.tga", true);
-	CreateTextureFromFile("res\\effect\\woodNH.tga", true);
-	CreateTextureFromFile("res\\effect\\dentNH.tga", true);
-	CreateTextureFromFile("res\\effect\\saintNH.tga", true);
+	if (!CreateTextureFromFile("res\\effect\\rocksNH.tga", true)) return false;
+	if (!CreateTextureFromFile("res\\effect\\wallNH.tga", true)) return false;
+	if (!CreateTextureFromFile("res\\effect\\bumpNH.tga", true)) return false;
+	if (!CreateTextureFromFile("res\\effect\\woodNH.tga", true)) return false;
+	if (!CreateTextureFromFile("res\\effect\\dentNH.tga", true)) return false;
+	if (!CreateTextureFromFile("res\\effect\\saintNH.tga", true)) return false;
 	update();
 	return true;
 }

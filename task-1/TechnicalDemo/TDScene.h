@@ -45,7 +45,7 @@ private:
 	CWater m_water;
 	std::string m_info;
 	char m_fps[16];
-	bool m_bDome, m_bObserve, m_bWater, m_bInfo, m_bShadow, m_bAim;
+	bool m_bDome, m_bObserve, m_bWater, m_bInfo, m_bShadow, m_bAim, m_bFog;
 	int m_iParallax;
 };
 

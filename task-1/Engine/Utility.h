@@ -11,7 +11,6 @@
 #include <time.h>
 #include <assert.h>
 #include <zmouse.h>
-#include "vld.h"
 #endif
 
 //-----------D3DÍ·¡¢¿âÎÄ¼ş------------

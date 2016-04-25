@@ -7,9 +7,10 @@ public:
 	CSkyDome();
 	~CSkyDome();
 
-	VOID onInit(LPCTSTR strTex, float fRadius);
-	VOID onTick(float fElapsedTime);
-	VOID onRender();
+	void onInit(LPCTSTR strTex, float fRadius);
+	void onTick(float fElapsedTime);
+	void onRender();
+	
 	void InitDebugInfo();
 	void ToggleDebug() { m_bDebug = !m_bDebug; }
 	void ToggleAlpha() { m_bAlpha = !m_bAlpha; }
@@ -27,3 +28,4 @@ private:
 	static const float s_fR;
 }; 
 #endif
+

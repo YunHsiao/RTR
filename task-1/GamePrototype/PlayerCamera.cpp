@@ -4,7 +4,7 @@
 
 GPPlayerCamera::GPPlayerCamera() 
 :m_fFollowDist(3.f)
-,m_vOffset(0.f, 3.f, 0.f)
+,m_vOffset(0.f, 1.f, 0.f)
 {
 	
 }
@@ -14,8 +14,8 @@ GPPlayerCamera::~GPPlayerCamera()
 
 }
 
-void GPPlayerCamera::onTick(float fElaspedTime) {
-	KeyboardInput(fElaspedTime);
+void GPPlayerCamera::onTick(float fElapsedTime) {
+	KeyboardInput(fElapsedTime);
 	MouseInput();
 	UpdateAxis();
 }
@@ -42,11 +42,11 @@ void GPPlayerCamera::RotateCameraDownRestrained(float fAngle) {
 		m_fPitch += fAngle;
 }
 
-void GPPlayerCamera::KeyboardInput(float fElaspedTime) {
-	if (GetAsyncKeyState(VK_UP) & 0x8000) RotateCameraDownRestrained(-fElaspedTime);
-	else if (GetAsyncKeyState(VK_DOWN) & 0x8000) RotateCameraDownRestrained(fElaspedTime);
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000) RotateCameraRight(-fElaspedTime);
-	else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) RotateCameraRight(fElaspedTime);
+void GPPlayerCamera::KeyboardInput(float fElapsedTime) {
+	if (GetAsyncKeyState(VK_UP) & 0x8000) RotateCameraDownRestrained(-fElapsedTime);
+	else if (GetAsyncKeyState(VK_DOWN) & 0x8000) RotateCameraDownRestrained(fElapsedTime);
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000) RotateCameraRight(-fElapsedTime);
+	else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) RotateCameraRight(fElapsedTime);
 }
 
 void GPPlayerCamera::MouseInput() {

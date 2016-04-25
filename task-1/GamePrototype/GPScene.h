@@ -6,6 +6,7 @@
 #include "EnemyManager.h"
 #include "HUD.h"
 #include "Player.h"
+#include "SkyDome.h"
 #include "..\Engine\Skybox.h"
 
 class GPScene
@@ -25,6 +26,9 @@ private:
 	GPHUD m_HUD;
 	GPPlayer m_player;
 	CSkyBox m_box;
+	CSkyDome m_sky;
+
+	bool m_bDome;
 };
 
 #endif

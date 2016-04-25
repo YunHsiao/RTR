@@ -15,6 +15,7 @@ public:
 	void onTick(float fElapsedTime);
 	void onRender();
 
+	inline D3DXVECTOR3& GetPosition() { return m_vPos; }
 	inline void ZoomIn(short wheel) { m_camera.ZoomIn(wheel); }
 	inline const D3DXMATRIX& GetViewMatrix() { return m_camera.GetViewMatrix(); }
 	inline const D3DXMATRIX& GetProjMatrix() { return m_camera.GetProjMatrix(); }

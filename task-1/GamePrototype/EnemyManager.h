@@ -5,8 +5,6 @@
 #include "Chamber.h"
 #include "Enemy.h"
 
-#define ENEMY_CNT 10
-
 class GPEnemyManager
 {
 public:
@@ -17,11 +15,15 @@ public:
 	void onTick(float fElapsedTime);
 	void onRender();
 
-	void Shoot(const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir, 
-		const D3DXMATRIX& matView);
+	void Shoot(const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir, const D3DXVECTOR3& vPlayerPos);
+
+	inline void ToggleDebug() { for (unsigned int i(0); i < m_vEnemies.size(); i++) m_vEnemies[i]->ToggleDebug(); }
+	inline void Add() { m_vEnemies.push_back(new GPEnemy()); m_vEnemies.back()->onInit(m_pChamber); }
+	inline void Kick() { if (m_vEnemies.size()) { delete m_vEnemies.back(); m_vEnemies.pop_back(); } }
+	inline int Count() { return m_vEnemies.size(); }
 
 private:
-	GPEnemy m_vEnemies[ENEMY_CNT];
+	std::vector<GPEnemy*> m_vEnemies;
 	GPChamber* m_pChamber;
 };
 #endif

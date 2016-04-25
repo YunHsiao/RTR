@@ -11,7 +11,7 @@ public:
 	TDCamera();
 	~TDCamera();
 
-	bool onTick(float fElaspedTime, CTerrain* terrain);
+	bool onTick(float fElapsedTime, CTerrain* terrain);
 	void MoveCamera(EMoveCameraType eType, float fDistance);
 	void EnableFollowing(CSkeletonMesh* pPlayer);
 	void DisableFollowing();
@@ -21,7 +21,7 @@ public:
 	void ToggleGravity() { m_bGravity = !m_bGravity; }
 
 protected:
-	void KeyboardInput(float fElaspedTime);
+	void KeyboardInput(float fElapsedTime);
 	void MouseInput();
 
 protected:

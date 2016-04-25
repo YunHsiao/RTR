@@ -38,7 +38,7 @@ void CCamera::MoveCamera(EMoveCameraType eType, float fDistance)
 	}
 }
 
-void CCamera::onTick(float fElaspedTime) {
+void CCamera::onTick(float fElapsedTime) {
 	UpdateAxis();
 	ApplyCamera();
 }

@@ -4,6 +4,8 @@
 #include "StaticMesh.h"
 #include <rmxftmpl.h>
 
+#define BB_COLOR 0xffff3500
+
 SkinMeshFrame::SkinMeshFrame()
 {
 	ZeroMemory(strFrameName, MAX_CHAR);
@@ -133,9 +135,11 @@ HRESULT SkinMeshContainer::UpdateSkinMesh()
 //-----------------------------------------------------------------
 
 CSkeletonMesh::CSkeletonMesh():
+m_pVB(NULL),
 m_pRootFrame(NULL),
 m_pCloneFrame(NULL),
 m_pCurAnimSet(NULL),
+m_bDebug(false),
 m_bCurActionLoop(false),
 m_fCurActionSpeed(1.f),
 m_fCurActionElasped(0.f),
@@ -165,6 +169,8 @@ CSkeletonMesh::~CSkeletonMesh()
 		Safe_Delete(*it);
 	m_vSkinMesh.clear();
 
+	Safe_Release(m_pVB);
+
 	Safe_Delete(m_pRootFrame);
 	Safe_Delete(m_pCloneFrame);
 }
@@ -174,7 +180,10 @@ bool CSkeletonMesh::onInit(const char* strFilePath, D3DXVECTOR3& vPos, float fSc
 	strcpy_s(m_strFilePath, MAX_CHAR, strFilePath);
 	D3DXMatrixScaling(&m_matAdjust, fScale, fScale, fScale);
 	m_matPlayer._41 = vPos.x; m_matPlayer._42 = vPos.y; m_matPlayer._43 = vPos.z;
+	return do_Init();
+}
 
+bool CSkeletonMesh::do_Init() {
 	// 加载骨骼动画
 	if (!ParseFile())
 		return false;
@@ -183,12 +192,17 @@ bool CSkeletonMesh::onInit(const char* strFilePath, D3DXVECTOR3& vPos, float fSc
 	if (!AttachSkinMeshToFrame())
 		return false;
 
+	if (FAILED(CDirect3D::getInstance()->CreateVertexBuffer(sizeof(SVertexD)*24, 
+		D3DUSAGE_WRITEONLY, SVertexD::FVF, D3DPOOL_DEFAULT, &m_pVB, NULL)))
+		return false;
+
 	// 挂接骨骼动画到骨骼
 	AttachAnimationToFrame();
 
 	// 克隆当前骨骼
 	m_pRootFrame->CloneFrame(&m_pCloneFrame);
 	m_pCurAnimSet = NULL;
+
 	return true;
 }
 
@@ -670,7 +684,7 @@ bool CSkeletonMesh::IsCurActionEnd()
 	return false;
 }
 
-void CSkeletonMesh::UpdateAction(float fElaspedTime)
+void CSkeletonMesh::UpdateAction(float fElapsedTime)
 {
 	if (NULL == m_pCurAnimSet)
 		return;
@@ -837,16 +851,16 @@ void CSkeletonMesh::UpdateAction(float fElaspedTime)
 		m_pCurAnimSet->vecAnimations[i]->pFrame->matLocalMatrix = matActionTransform;
 	}
 
-	m_fCurActionElasped += fElaspedTime * m_fCurActionSpeed;
+	m_fCurActionElasped += fElapsedTime * m_fCurActionSpeed;
 }
 
-bool CSkeletonMesh::onTick(float fElaspedTime)
+bool CSkeletonMesh::onTick(float fElapsedTime)
 {
 	if (!m_pRootFrame || !m_vSkinMesh.size())
 		return false;
 
 	// 更新动作
-	UpdateAction(fElaspedTime);
+	UpdateAction(fElapsedTime);
 
 	// 更新骨骼
 	m_pRootFrame->UpdateFrame(NULL);
@@ -860,8 +874,11 @@ bool CSkeletonMesh::onTick(float fElaspedTime)
 	return true;
 }
 
-void CSkeletonMesh::UpdateBoundingBox() {
-	/**
+void CSkeletonMesh::UpdateBoundingBox(const D3DXVECTOR3* vMinOffset, const D3DXVECTOR3* vMaxOffset) {
+	if (!m_vSkinMesh.size()) return;
+	m_vMin = D3DXVECTOR3(1e6f, 1e6f, 1e6f);
+	m_vMax = D3DXVECTOR3(-1e6f, -1e6f, -1e6f);
+	/* copy the original info *
 	D3DXVECTOR3* pVertices;
 	ID3DXMesh* pMesh;
 	m_vSkinMesh[0]->pRenderMesh->CloneMeshFVF(D3DXMESH_MANAGED, D3DFVF_XYZ, 
@@ -877,7 +894,7 @@ void CSkeletonMesh::UpdateBoundingBox() {
 	}
 	pMesh->UnlockVertexBuffer();
 	Safe_Release(pMesh);
-	/**/
+	/* read in place */
 	char* pVertices;
 	DWORD bytes(m_vSkinMesh[0]->pRenderMesh->GetNumBytesPerVertex());
 	m_vSkinMesh[0]->pRenderMesh->LockVertexBuffer(0, (void**) &pVertices);
@@ -893,9 +910,30 @@ void CSkeletonMesh::UpdateBoundingBox() {
 	}
 	m_vSkinMesh[0]->pRenderMesh->UnlockVertexBuffer();
 	/**/
-	D3DXVECTOR3 fL((m_vMax - m_vMin) * .2f);
-	m_vMin.x += fL.x; m_vMax.x -= fL.x;
-	m_vMin.z += fL.z; m_vMax.z -= fL.z;
+	if (vMinOffset && vMaxOffset) { m_vMin += *vMinOffset; m_vMax += *vMaxOffset; }
+
+	// Update rendering data
+	SVertexD *pVertices2; unsigned int iCnt(0);
+	m_pVB->Lock(0, sizeof(SVertexD)*24, (void**)&pVertices2, 0);
+	writeLine(pVertices2, iCnt, m_vMin, D3DXVECTOR3(m_vMin.x, m_vMin.y, m_vMax.z));
+	writeLine(pVertices2, iCnt, m_vMin, D3DXVECTOR3(m_vMin.x, m_vMax.y, m_vMin.z));
+	writeLine(pVertices2, iCnt, m_vMin, D3DXVECTOR3(m_vMax.x, m_vMin.y, m_vMin.z));
+	writeLine(pVertices2, iCnt, m_vMax, D3DXVECTOR3(m_vMax.x, m_vMax.y, m_vMin.z));
+	writeLine(pVertices2, iCnt, m_vMax, D3DXVECTOR3(m_vMax.x, m_vMin.y, m_vMax.z));
+	writeLine(pVertices2, iCnt, m_vMax, D3DXVECTOR3(m_vMin.x, m_vMax.y, m_vMax.z));
+	writeLine(pVertices2, iCnt, D3DXVECTOR3(m_vMin.x, m_vMin.y, m_vMax.z), D3DXVECTOR3(m_vMin.x, m_vMax.y, m_vMax.z));
+	writeLine(pVertices2, iCnt, D3DXVECTOR3(m_vMin.x, m_vMin.y, m_vMax.z), D3DXVECTOR3(m_vMax.x, m_vMin.y, m_vMax.z));
+	writeLine(pVertices2, iCnt, D3DXVECTOR3(m_vMin.x, m_vMax.y, m_vMin.z), D3DXVECTOR3(m_vMin.x, m_vMax.y, m_vMax.z));
+	writeLine(pVertices2, iCnt, D3DXVECTOR3(m_vMin.x, m_vMax.y, m_vMin.z), D3DXVECTOR3(m_vMax.x, m_vMax.y, m_vMin.z));
+	writeLine(pVertices2, iCnt, D3DXVECTOR3(m_vMax.x, m_vMin.y, m_vMin.z), D3DXVECTOR3(m_vMax.x, m_vMin.y, m_vMax.z));
+	writeLine(pVertices2, iCnt, D3DXVECTOR3(m_vMax.x, m_vMin.y, m_vMin.z), D3DXVECTOR3(m_vMax.x, m_vMax.y, m_vMin.z));
+	m_pVB->Unlock();
+}
+
+void CSkeletonMesh::writeLine(SVertexD* pVertices, unsigned int& iCnt, 
+		const D3DXVECTOR3& p, const D3DXVECTOR3& q) {
+	pVertices[iCnt++] = SVertexD(p.x, p.y, p.z, BB_COLOR);
+	pVertices[iCnt++] = SVertexD(q.x, q.y, q.z, BB_COLOR);
 }
 
 bool CSkeletonMesh::Intersect(const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir) {
@@ -942,6 +980,12 @@ void CSkeletonMesh::onRender(const D3DXMATRIX* matMirror)
 
 	for (MeshIT it = m_vStaticMesh.begin(); m_vStaticMesh.end() != it; it++)
 		(*it)->onRender(matMirror?&(m_matWorld* *matMirror):&m_matWorld);
+
+	if (m_bDebug) {
+		CDirect3D::getInstance()->SetD3DFVF(SVertexD::FVF);
+		CDirect3D::getInstance()->SetStreamSource(0, m_pVB, 0, sizeof(SVertexD));
+		CDirect3D::getInstance()->DrawPrimitive(D3DPT_LINELIST, 0, 12);
+	}
 
 	CDirect3D::getInstance()->SetTexture(0, NULL);
 	if (matMirror) {

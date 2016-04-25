@@ -38,7 +38,8 @@ void CBillBoards::onRender(const D3DXMATRIX& mView, const D3DXVECTOR3& vPos) {
 	CDirect3D::getInstance()->SetStreamSource(0, m_pVB, 0, sizeof(SVertexT));
 	CDirect3D::getInstance()->SetTexture(0, m_pTexture);
 	m_matWorld = mView;
-	m_matWorld._41 = m_matWorld._42 = m_matWorld._43 = 0.f;
+	m_matWorld._12 = m_matWorld._32 = m_matWorld._41 = m_matWorld._42 = m_matWorld._43 = 0.f;
+	m_matWorld._22 = 1.f;
 	D3DXMatrixTranspose(&m_matWorld, &m_matWorld);
 	for (unsigned int i(0); i < m_vPos.size(); i++) {
 		m_matWorld._41 = m_vPos[i].x; m_matWorld._42 = m_vPos[i].y; m_matWorld._43 = m_vPos[i].z;

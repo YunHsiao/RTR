@@ -27,8 +27,7 @@ CSkyDome::~CSkyDome() {
 	}
 }
 
-VOID CSkyDome::onInit(LPCTSTR strTex, float fRadius)
-{   
+void CSkyDome::onInit(LPCTSTR strTex, float fRadius) {
 	int dtheta(15), dphi(15);
 	m_iNumVertices = (360/dtheta) * (90/dphi) * 4;
 	m_vSun = D3DXVECTOR3(0.f, fRadius, 0.f); // noon
@@ -107,13 +106,13 @@ void CSkyDome::InitDebugInfo() {
 	DeleteDC( hdc );
 }
 
-VOID CSkyDome::onTick(float fElapsedTime) {
+void CSkyDome::onTick(float fElapsedTime) {
 	m_fAngle += fElapsedTime * 0.03f;
 	D3DXMatrixRotationY(&m_matWorld, -m_fAngle);
 	m_matWorld._42 = -3.f;
 }
 
-VOID CSkyDome::onRender() {
+void CSkyDome::onRender() {
 	CDirect3D::getInstance()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	CDirect3D::getInstance()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	CDirect3D::getInstance()->AlphaBlendEnable(TRUE);

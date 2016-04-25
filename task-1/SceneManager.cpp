@@ -49,8 +49,11 @@ void CSceneManager::Go()
 }
 
 void CSceneManager::onInit()
-{ 
-	CWindow::getInstance()->setWinSize(1280, 720);//设置窗口的大小
+{
+	long lWidth(1280), lHeight(720);
+	if (GetAsyncKeyState(VK_CONTROL) & 0x8000) { lWidth = 800; lHeight = 600; }
+	if (GetAsyncKeyState(VK_SHIFT) & 0x8000) { lWidth = 1024; lHeight = 768; }
+	CWindow::getInstance()->setWinSize(lWidth, lHeight); //设置窗口的大小
 	CWindow::getInstance()->onInit();
 	CDirect3D::getInstance()->onInit();
 	m_scene.onInit();

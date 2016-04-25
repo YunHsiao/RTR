@@ -119,15 +119,17 @@ public:
 	~CSkeletonMesh();
 
 	virtual bool onInit(const char* strFilePath, D3DXVECTOR3& vPos, float fScale);
-	virtual bool onTick(float fElaspedTime);
+	virtual bool onTick(float fElapsedTime);
 	virtual void onRender(const D3DXMATRIX* matMirror = NULL);
 
 	// 设置骨骼动画动作
 	bool SetAction(std::string strActionName, bool bActionLoop, float fActionSpeed = 1.f, float fActionBlendTime = 0.f);
 	bool IsCurActionEnd();
+	inline D3DXMATRIX* GetAdjustTransform() { return &m_matAdjust; }
 	inline D3DXMATRIX* GetTransform() { return &m_matPlayer; }
 	inline D3DXMATRIX* GetWorldTransform() { return &m_matWorld; }
-	inline ID3DXMesh* GetMesh(unsigned int i) { return m_vSkinMesh[i]->pRenderMesh; }
+	inline ID3DXMesh* GetMesh(unsigned int i) { if (m_vSkinMesh.size() > i) 
+		return m_vSkinMesh[i]->pRenderMesh; return NULL; }
 	inline CStaticMesh* GetAttachedMesh(unsigned int i) { return m_vStaticMesh[i]; }
 
 	// 获取骨骼继承父骨骼变换矩阵
@@ -141,11 +143,13 @@ public:
 
 	void AttachMesh(CStaticMesh* pMesh, const char* strFrameName);
 
-	// 包围盒
-	void UpdateBoundingBox();
+	// 包围盒(人工误差调整)
+	void UpdateBoundingBox(const D3DXVECTOR3* vMinOffset = NULL, const D3DXVECTOR3* vMaxOffset = NULL);
 	bool Intersect(const D3DXVECTOR3& vPos, const D3DXVECTOR3& vDir);
+	void ToggleDebug() { m_bDebug = !m_bDebug; }
 
 protected:
+	bool do_Init();
 	// 解析x文件
 	bool ParseFile();
 	bool ParseObject(ID3DXFileData* pDataObj, ID3DXFileData* pParentDataObj, void** Data, bool bReference);
@@ -164,12 +168,15 @@ protected:
 	void AttachAnimationToFrame();
 
 	// 更新当前动作
-	void UpdateAction(float fElaspedTime);
+	void UpdateAction(float fElapsedTime);
 
 	HRESULT GetObjectGUID(ID3DXFileData* pDataObj, GUID* type);
 	char* GetObjectName(ID3DXFileData* pDataObj);
 	LPCVOID LockObjectData(ID3DXFileData* pDataObj, SIZE_T* Size);
 	void UnLockObjectData(ID3DXFileData* pDataObj);
+
+	void writeLine(SVertexD* pVertices, unsigned int& iCnt, 
+		const D3DXVECTOR3& p, const D3DXVECTOR3& q);
 
 	char m_strFilePath[MAX_CHAR];
 	char m_strTmp[MAX_CHAR];
@@ -187,7 +194,10 @@ protected:
 	std::vector<CStaticMesh*> m_vStaticMesh;		// 子静态模型
 	D3DXMATRIX m_matWorld;							// 世界矩阵
 	D3DXMATRIX m_matAdjust, m_matPlayer;			// 模型调整矩阵，位移矩阵
+
 	D3DXVECTOR3 m_vMin, m_vMax;						// AABB包围盒
+	IDirect3DVertexBuffer9* m_pVB;
+	bool m_bDebug;
 
 	typedef std::map<std::string, AnimationSet*>::iterator AnimSetIT;
 	typedef std::vector<CStaticMesh*>::iterator MeshIT;

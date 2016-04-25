@@ -22,8 +22,8 @@ void CWater::onInit(const char* strTexPre, const char* strTexPost, int iFrames, 
 	m_fLX = fRX; m_fLZ = fRZ; m_iVX = (int) m_fLX/4; m_iVZ = (int) m_fLZ/4;
 	m_iEX = m_iVX - 1; m_iEZ = m_iVZ - 1;
 	m_lV = m_iVX * m_iVZ; m_lT = m_iEX * m_iEZ * 2;
-	D3DXCreateMeshFVF(m_lT, m_lV, D3DXMESH_MANAGED, SVertexNT::FVF, 
-		CDirect3D::getInstance()->GetD3D9Device(), &m_pMesh);
+	if (FAILED(D3DXCreateMeshFVF(m_lT, m_lV, D3DXMESH_MANAGED, SVertexNT::FVF, 
+		CDirect3D::getInstance()->GetD3D9Device(), &m_pMesh))) return;
 
 	SVertexNT* pVertices;
 	m_pMesh->LockVertexBuffer(0, (void**) &pVertices);
@@ -65,6 +65,7 @@ void CWater::onInit(const char* strTexPre, const char* strTexPost, int iFrames, 
 }
 
 void CWater::onTick(float fElapsedTime) {
+	if (!m_pMesh) return;
 	static float fTemp(0.f);
 	fTemp += fElapsedTime * .4f;
 
@@ -83,6 +84,7 @@ void CWater::onTick(float fElapsedTime) {
 }
 
 void CWater::onRender() {
+	if (!m_ppTexture[0]) return;
 	CDirect3D::getInstance()->SetTransform(D3DTS_WORLD, &m_mat);
 	CDirect3D::getInstance()->SetTexture(0, m_ppTexture[m_iCur]);
 	m_pMesh->DrawSubset(0);

@@ -36,6 +36,7 @@ void CShadow::onInit(const D3DXVECTOR3* pSun) {
 }
 
 void CShadow::add(ID3DXMesh* pMesh, D3DXMATRIX* pMat) {
+	if (!pMesh) return;
 	DWORD dwFaces(pMesh->GetNumFaces());
 	IDirect3DVertexBuffer9* pVB;
 	CDirect3D::getInstance()->CreateVertexBuffer(sizeof(D3DXVECTOR3)*dwFaces*18, 
@@ -124,8 +125,7 @@ void CShadow::AddEdge(WORD* pEdges, DWORD& dwEdges, WORD v0, WORD v1) {
 }
 
 void CShadow::onRender() {
-	// using z-pass algorithm particularly (but not a better one)
-	// because of the limited functionality of fixed pipeline
+	// using z-pass algorithm
 	CDirect3D::getInstance()->DepthWriteEnable(FALSE);
 	CDirect3D::getInstance()->StencilEnable(TRUE);
 	CDirect3D::getInstance()->AlphaBlendEnable(TRUE);

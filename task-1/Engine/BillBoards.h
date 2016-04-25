@@ -8,9 +8,9 @@ public:
 	virtual ~CBillBoards();
 
 	void onInit(LPCTSTR strTex);
-	void onRender(const D3DXMATRIX& mView, const D3DXVECTOR3& vPos);
+	virtual void onRender(const D3DXMATRIX& mView, const D3DXVECTOR3& vPos);
 	void Add(const D3DXVECTOR3& vPos) { m_vPos.push_back(vPos); }
-private:
+protected:
 	D3DXMATRIX m_matWorld;
 	std::vector<D3DXVECTOR3> m_vPos;
 	IDirect3DTexture9 *m_pTexture;

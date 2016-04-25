@@ -7,10 +7,10 @@ float3 g_vEye;
 
 // Parameter
 bool g_bShadows = true;
+int g_iMin = 10;
+int g_iMax = 100;
 float g_fDepth = 0.2;
 float g_fTiling = 1;
-float g_iMin = 10;
-float g_iMax = 100;
 float2 g_vTexSize = float2(512, 512);
 float3 g_vLight = float3(0, 0, 1);
 
@@ -107,7 +107,8 @@ PS_OUTPUT PSMain(VS_OUTPUT i) {
 	
 	// Sample the HeightMap according to the angle between V and N in Tangent Space
 	// (for the viewer: the more oblique the more samples taken)
-	int iTotal = (int) lerp(g_iMin, g_iMax, Vt.z);
+	int iTotal = g_iMin;
+	if (Vt.z > 0) iTotal = lerp(g_iMax, g_iMin, Vt.z);
     
 	int iCnt = 0;
 	float fCur = 1.0;
@@ -146,12 +147,12 @@ PS_OUTPUT PSMain(VS_OUTPUT i) {
 	float fShadowFactor = 1;
 	if (g_bShadows && Lt.z > 0) {
 		float fTemp = 0;
-		iTotal = 10;
-		iCnt = 0;
-		fStep = 1 / iTotal + 0.1;
-		fCur = tex2Dlod(spNH, float4(uv, 0, 1)).a + fStep;
+		iTotal = lerp(20, 4, Lt.z);
+		iCnt = 1;
+		fCur = tex2Dlod(spNH, float4(uv, 0, 1)).a;
+		fStep = (1 - fCur) / iTotal;
 		vStep = fStep * Lt.xy * g_fDepth;
-		vCur = uv + vStep;
+		vCur = uv;
 		while (iCnt < iTotal) {
 			vCur += vStep; // LtÑÓ³¤Ïß
 			fCurH = tex2Dlod(spNH, float4(vCur, 0, 1)).a;

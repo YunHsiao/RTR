@@ -18,26 +18,26 @@ GPChamber::~GPChamber()
 void GPChamber::onInit(float fZ) {
 	// Textures
 	IDirect3DTexture9* pTex;
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		TEXT("res\\iceworld\\Glacier.jpg"), &pTex);
+	if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+		TEXT("res\\iceworld\\Glacier.jpg"), &pTex))) return;
 	m_vTextures.push_back(pTex);
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		TEXT("res\\iceworld\\Snow.jpg"), &pTex);
+	if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+		TEXT("res\\iceworld\\Snow.jpg"), &pTex))) return;
 	m_vTextures.push_back(pTex);
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		TEXT("res\\iceworld\\Eskimoan Construction.jpg"), &pTex);
+	if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+		TEXT("res\\iceworld\\Eskimoan Construction.jpg"), &pTex))) return;
 	m_vTextures.push_back(pTex);
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		TEXT("res\\iceworld\\Ice Diamonds.jpg"), &pTex);
+	if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+		TEXT("res\\iceworld\\Ice Diamonds.jpg"), &pTex))) return;
 	m_vTextures.push_back(pTex);
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		TEXT("res\\iceworld\\Poseidon's Palace.jpg"), &pTex);
+	if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+		TEXT("res\\iceworld\\Poseidon's Palace.jpg"), &pTex))) return;
 	m_vTextures.push_back(pTex);
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		TEXT("res\\iceworld\\Chiseled Ice.jpg"), &pTex);
+	if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+		TEXT("res\\iceworld\\Chiseled Ice.jpg"), &pTex))) return;
 	m_vTextures.push_back(pTex);
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		TEXT("res\\iceworld\\Muddy Ice.jpg"), &pTex);
+	if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+		TEXT("res\\iceworld\\Muddy Ice.jpg"), &pTex))) return;
 	m_vTextures.push_back(pTex);
 	// Map Parameter
 	float fX(fZ * .84f), fRight(fZ * .3f), fTop(fZ * .39f),
@@ -131,6 +131,7 @@ void GPChamber::writeCube(SVertexT* pVertex, unsigned int& cnt,
 }
 
 void GPChamber::onRender() {
+	if (!m_vColliders.size()) return;
 	CDirect3D::getInstance()->SetD3DFVF(SVertexT::FVF);
 	CDirect3D::getInstance()->SetStreamSource(0, m_pVB, 0, sizeof(SVertexT));
 	CDirect3D::getInstance()->SetCullMode(D3DCULL_NONE);

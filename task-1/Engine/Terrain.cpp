@@ -53,8 +53,8 @@ bool CTerrain::onInit(LPCTSTR strTex, LPCTSTR strHei, int iWidthLog, int iLength
 	IDirect3DTexture9 *pHei(NULL);
 	BYTE* cHeight(NULL);
 	if (strHei) {
-		D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
-		strHei, &pHei);
+		if (FAILED(D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(),
+			strHei, &pHei))) return false;
 		D3DSURFACE_DESC desc;
 		pHei->GetLevelDesc(0, &desc);
 		m_iX = desc.Width; m_iZ = desc.Height;
@@ -218,6 +218,7 @@ SNode* CTerrain::FindNode(SNode* node, int C, int D) {
 }
 
 bool CTerrain::InitDefaultIB() {
+	if (!m_pIB) return false;
 	m_iTriangles = m_iX * m_iZ * 2;
 	UINT iIndices(sizeof(DWORD)*m_iTriangles * 3);
 	DWORD* pIndices;
@@ -239,6 +240,7 @@ bool CTerrain::InitDefaultIB() {
 }
 
 void CTerrain::PruneQuadTree(SNode *node, const D3DXVECTOR3& vPos) {
+	if (!m_pVertices) return;
 	D3DXVECTOR3 *vCenter = &m_pVertices[node->b + node->H][node->l + node->W];
 	float fRadiusSq(node->H * m_fSegZ + node->W * m_fSegX);
 	fRadiusSq *= fRadiusSq;
@@ -251,7 +253,7 @@ void CTerrain::PruneQuadTree(SNode *node, const D3DXVECTOR3& vPos) {
 		return; // Cull
 	//if (!node->H && !node->W || D3DXVec3LengthSq(&(*m_pPos - *vCenter)) > 1e3f*fThreshold) { // Draw
 	if (!node->H && !node->W || D3DXVec3LengthSq(&(vPos - *vCenter))
-		/ (node->diff * node->diff * 1e5f) >= 1) { // Draw
+		> node->diff * node->diff * 1e5f) { // Draw
 		node->status = ERS_VISIBLE;
 	} else { // Recurse
 		node->status = ERS_RECURSED;
@@ -378,8 +380,8 @@ void CTerrain::RecoverQuadTree(SNode *node) {
 	RecoverQuadTree(node->sw); RecoverQuadTree(node->se);
 }
 
-VOID CTerrain::onTick(float fElapsedTime, const D3DXMATRIX& pView, const D3DXMATRIX& pProj, const D3DXVECTOR3& pPos) {
-	if (!m_bLOD) return;
+void CTerrain::onTick(float fElapsedTime, const D3DXMATRIX& pView, const D3DXMATRIX& pProj, const D3DXVECTOR3& pPos) {
+	if (!m_bLOD || !m_pIB) return;
 	D3DXMATRIX temp = pView * pProj;
 	if (temp == m_mat) return;
 	m_mat = temp;

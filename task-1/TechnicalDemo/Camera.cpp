@@ -82,10 +82,10 @@ void TDCamera::MouseInput() {
 	}
 }
 
-bool TDCamera::onTick(float fElaspedTime, CTerrain* terrain)
+bool TDCamera::onTick(float fElapsedTime, CTerrain* terrain)
 {
 	static float fTime(0.f);
-	KeyboardInput(fElaspedTime);
+	KeyboardInput(fElapsedTime);
 	if (m_bDragging || m_bFollowing) MouseInput();
 	UpdateAxis();
 	if (m_bFollowing) {
@@ -104,7 +104,7 @@ bool TDCamera::onTick(float fElaspedTime, CTerrain* terrain)
 		} else action = "stand";
 		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
 			action = "attack";
-			fTime += fElaspedTime;
+			fTime += fElapsedTime;
 			// Animation Specific Parameters
 			if (fTime > 1.2f) {
 				fTime = 0.f;

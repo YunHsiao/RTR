@@ -137,23 +137,23 @@ bool TDMisc::onInit()
 }
 
 void TDMisc::onTick(float fElapsedTime) {
-	static float strench(1.f), acc(0.f);
-	strench = sin(acc);
-	acc += fElapsedTime;
-	SVertexD* pVertices;
-	m_pVB->Lock(0, sizeof(SVertexD) * 644, (void**)&pVertices, 0);
-	UINT cnt(44);
-	for (UINT i(0); i < 10; i++) {
-		for (UINT j(0); j < 10; j++) {
-			pVertices[cnt++] = m_grid[i][j] + m_grid[i][j] * strench;
-			pVertices[cnt++] = m_grid[i][j + 1] + m_grid[i][j] * strench;
-			pVertices[cnt++] = m_grid[i + 1][j] + m_grid[i][j] * strench;
-			pVertices[cnt++] = m_grid[i][j + 1] + m_grid[i][j] * strench;
-			pVertices[cnt++] = m_grid[i + 1][j + 1] + m_grid[i][j] * strench;
-			pVertices[cnt++] = m_grid[i + 1][j] + m_grid[i][j] * strench;
-		}
-	}
-	m_pVB->Unlock();
+	//static float strench(1.f), acc(0.f);
+	//strench = sin(acc);
+	//acc += fElapsedTime;
+	//SVertexD* pVertices;
+	//m_pVB->Lock(0, sizeof(SVertexD) * 644, (void**)&pVertices, 0);
+	//UINT cnt(44);
+	//for (UINT i(0); i < 10; i++) {
+	//	for (UINT j(0); j < 10; j++) {
+	//		pVertices[cnt++] = m_grid[i][j] + m_grid[i][j] * strench;
+	//		pVertices[cnt++] = m_grid[i][j + 1] + m_grid[i][j] * strench;
+	//		pVertices[cnt++] = m_grid[i + 1][j] + m_grid[i][j] * strench;
+	//		pVertices[cnt++] = m_grid[i][j + 1] + m_grid[i][j] * strench;
+	//		pVertices[cnt++] = m_grid[i + 1][j + 1] + m_grid[i][j] * strench;
+	//		pVertices[cnt++] = m_grid[i + 1][j] + m_grid[i][j] * strench;
+	//	}
+	//}
+	//m_pVB->Unlock();
 	static float fAngle(0.f);
 	float sn(sin(fAngle)), cs(cos(fAngle));
 	D3DXMatrixRotationX(&m_matLeft, fAngle);
@@ -180,8 +180,8 @@ void TDMisc::onRender() {
 	CDirect3D::getInstance()->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 12);
 	CDirect3D::getInstance()->SetTransform(D3DTS_WORLD, &m_matRight);
 	CDirect3D::getInstance()->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 36, 0, 8, 0, 12);
-	CDirect3D::getInstance()->SetTransform(D3DTS_WORLD, &m_matId);
-	CDirect3D::getInstance()->DrawPrimitive(D3DPT_TRIANGLELIST, 44, 200);
+	//CDirect3D::getInstance()->SetTransform(D3DTS_WORLD, &m_matId);
+	//CDirect3D::getInstance()->DrawPrimitive(D3DPT_TRIANGLELIST, 44, 200);
 
 	CDirect3D::getInstance()->SetTransform(D3DTS_WORLD, &m_matTeapot);
 	CDirect3D::getInstance()->D3DLightEnable(TRUE);

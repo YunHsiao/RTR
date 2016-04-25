@@ -19,9 +19,26 @@ CStaticMesh::~CStaticMesh()
 	m_mapTexture.clear();
 }
 
+
+bool CStaticMesh::onInit(const char* strFilePath, D3DXVECTOR3& vPos, float fScale, 
+			D3DXVECTOR3& vRot, float fAngle) {
+	D3DXMATRIX mSca, mRot, mTra;
+	D3DXMatrixScaling(&mSca, fScale, fScale, fScale);
+	D3DXMatrixRotationAxis(&mRot, &vRot, fAngle);
+	D3DXMatrixTranslation(&mTra, vPos.x, vPos.y, vPos.z);
+	m_matId = mSca * mRot * mTra;
+	ID3DXBuffer *pAdjacency, *pBufferMaterial;
+	DWORD dNumMaterial;
+	ID3DXMesh *pStaticMesh(NULL);
+	D3DXLoadMeshFromXA(strFilePath, D3DXMESH_MANAGED, CDirect3D::getInstance()->GetD3D9Device(), 
+		&pAdjacency, &pBufferMaterial, NULL, &dNumMaterial, &pStaticMesh);
+	return onInit(strFilePath, pAdjacency, pBufferMaterial, dNumMaterial, pStaticMesh, NULL);
+}
+
 bool CStaticMesh::onInit(const char* strFilePath, ID3DXBuffer* pAdjacency, ID3DXBuffer* pBufferMaterial, 
 							 DWORD dNumMaterial, ID3DXMesh* pStaticMesh, D3DXMATRIX* pMatParent)
 {
+	if (!pStaticMesh) return false;
 	m_pAdjacency = pAdjacency;
 	m_pStaticMesh = pStaticMesh;
 	m_pMatParent = pMatParent;
@@ -54,7 +71,7 @@ bool CStaticMesh::onInit(const char* strFilePath, ID3DXBuffer* pAdjacency, ID3DX
 }
 
 bool CStaticMesh::onInit(const char* strFilePath, D3DXVECTOR3& vPos, 
-	float fScale, float fYaw, float fPitch, float fRoll) {
+		float fScale, float fYaw, float fPitch, float fRoll) {
 	D3DXMATRIX mSca, mRot, mTra;
 	D3DXMatrixScaling(&mSca, fScale, fScale, fScale);
 	D3DXMatrixRotationYawPitchRoll(&mRot, fYaw, fPitch, fRoll);

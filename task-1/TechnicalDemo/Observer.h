@@ -8,7 +8,7 @@ class TDObserver : public CCamera
 public:
 	void onTick(float fElapsedTime);
 protected:
-	void KeyboardInput(float fElaspedTime);
+	void KeyboardInput(float fElapsedTime);
 
 };
 #endif

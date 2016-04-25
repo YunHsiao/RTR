@@ -14,11 +14,15 @@ public:
 	bool onTick(float fElapsedTime);
 	void onRender();
 
-	void die(const D3DXMATRIX& matView);
+	void die(const D3DXVECTOR3& vPlayerPos);
 
 private:
 	void spawn();
+	void ParameterAdaptaion();
+
 	GPChamber* m_pChamber;
+	D3DXVECTOR3 m_vMinOffset, m_vMaxOffset; // BB Parameters
+	bool m_bCrouching;
 	float m_fX, m_fZ;
 };
 #endif

@@ -15,7 +15,7 @@ public:
 	virtual ~CCamera();
 
 	void onInit();
-	virtual void onTick(float fElaspedTime);
+	virtual void onTick(float fElapsedTime);
 	virtual void MoveCamera(EMoveCameraType eType, float fDistance);
 	void ApplyCamera();
 
@@ -38,7 +38,7 @@ public:
 
 protected:
 	void UpdateAxis();
-	virtual void KeyboardInput(float fElaspedTime) {}
+	virtual void KeyboardInput(float fElapsedTime) {}
 	virtual void MouseInput() {}
 	void UpdateProjection();
 
