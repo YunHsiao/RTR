@@ -3,7 +3,7 @@
 #include "Camera.h"
 
 CCamera::CCamera():
-m_fFovy(D3DX_PI/3),
+m_fFovy(D3DX_PI/180*59),
 m_fYaw(0.f),
 m_fPitch(0.f),
 m_vecEyePosition(0.f, 0.f, 0.f),
@@ -61,6 +61,7 @@ void CCamera::ApplyCamera() {
 void CCamera::UpdateProjection() {
 	float fAspect = (float)CDirect3D::getInstance()->GetWindowWidth() / 
 		(float)CDirect3D::getInstance()->GetWindowHeight();
+	if (fAspect < 16.f / 9.f) m_fFovy = D3DX_PI / 180 * 74;
 	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFovy, fAspect, 1.f, 5000.f);
 	CDirect3D::getInstance()->SetTransform(D3DTS_PROJECTION, &m_matProj);
 }
