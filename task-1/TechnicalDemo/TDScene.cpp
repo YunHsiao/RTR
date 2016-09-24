@@ -65,6 +65,7 @@ void TDScene::onInit() {
 	m_disc.onInit(TEXT("res\\mesh\\disc.x"));
 	m_terrain.onInit(TEXT("res\\tex.jpg"), TEXT("res\\hei.bmp"));
 	m_water.onInit("res\\water\\Water", ".png", 45, m_terrain.GetRadiusX(), m_terrain.GetRadiusZ());
+	m_welcome.onInit(D3DXVECTOR3(0.f, 4.5f, 0.f), TEXT("res\\welcome.png"));
 	CDirect3D::getInstance()->SetExponentialFog(.01f, 0xffaaaaaa);
 	CDirect3D::getInstance()->EnableFog(m_bFog);
 }
@@ -111,6 +112,7 @@ void TDScene::onRender() {
 		m_curCam->GetProjMatrix(), m_curCam->GetCameraPosition());
 	if (m_bDome) m_sky.onRender();
 	if (m_bWater) m_water.onRender();
+	m_welcome.onRender(m_camera.GetViewMatrix(), m_camera.GetCameraPosition());
 	m_grass.onRender(m_camera.GetViewMatrix(), m_camera.GetCameraPosition());
 	m_terrain.onRender();
 	if (m_bShadow) m_shadow.onRender();

@@ -17,17 +17,23 @@ CBillBoard::~CBillBoard()
 
 void CBillBoard::onInit(const D3DXVECTOR3& vPos, LPCTSTR strTex) {
 	m_vPos = vPos;
-	D3DXCreateTextureFromFile(CDirect3D::getInstance()->GetD3D9Device(), 
-		strTex, &m_pTexture);
+	if (FAILED(D3DXCreateTextureFromFileEx(CDirect3D::getInstance()->GetD3D9Device(), 
+		strTex,D3DX_DEFAULT_NONPOW2,D3DX_DEFAULT_NONPOW2,
+		1,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,
+		D3DX_FILTER_LINEAR,D3DX_FILTER_NONE,0,NULL,NULL,
+		&m_pTexture))) return;
+	D3DSURFACE_DESC desc;
+	m_pTexture->GetLevelDesc(0, &desc);
+	float fRatio = (float) desc.Height / desc.Width;
 	if(FAILED(CDirect3D::getInstance()->CreateVertexBuffer(sizeof(SVertexT)*4, 
 		D3DUSAGE_WRITEONLY, SVertexT::FVF, D3DPOOL_DEFAULT, &m_pVB, NULL))) 
 		return; 
 	SVertexT* pVertices;
 	m_pVB->Lock(0, 0, (void**) &pVertices, 0);
 	pVertices[0] = SVertexT(-.5f, -.5f, 0.f, 0.f, 1.f);
-	pVertices[1] = SVertexT(-.5f,  .5f, 0.f, 0.f, 0.f);
+	pVertices[1] = SVertexT(-.5f, fRatio - .5f, 0.f, 0.f, 0.f);
 	pVertices[2] = SVertexT( .5f, -.5f, 0.f, 1.f, 1.f);
-	pVertices[3] = SVertexT( .5f,  .5f, 0.f, 1.f, 0.f);
+	pVertices[3] = SVertexT( .5f, fRatio - .5f, 0.f, 1.f, 0.f);
 	m_pVB->Unlock();
 }
 

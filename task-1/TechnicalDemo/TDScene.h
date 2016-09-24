@@ -10,6 +10,7 @@
 #include "Disc.h"
 #include "Water.h"
 #include "..\Engine\BaseCamera.h"
+#include "..\Engine\Billboard.h"
 #include "..\Engine\SkeletonMesh.h"
 #include "..\Engine\Shadow.h"
 #include "..\Engine\Skybox.h"
@@ -37,6 +38,7 @@ private:
 	TDGrass m_grass;
 	TDSimpleMirror m_mirror;
 	TDDisc m_disc;
+	CBillBoard m_welcome;
 	CShadow m_shadow;
 	CSkeletonMesh m_skeleton, m_model;
 	CSkyBox m_box;
