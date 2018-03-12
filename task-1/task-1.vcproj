@@ -450,6 +450,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Flock"
+				>
+				<File
+					RelativePath=".\Engine\Boid.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\Boid.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\Flock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\Flock.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Game Prototype"

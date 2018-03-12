@@ -440,7 +440,7 @@ VOID CTerrain::onRender() {
 	CDirect3D::getInstance()->SetTexture(0, m_pTex);
 	CDirect3D::getInstance()->SetTexture(1, m_pDet);
 	CDirect3D::getInstance()->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-	CDirect3D::getInstance()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+	//CDirect3D::getInstance()->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	CDirect3D::getInstance()->SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	CDirect3D::getInstance()->SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
 	CDirect3D::getInstance()->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);

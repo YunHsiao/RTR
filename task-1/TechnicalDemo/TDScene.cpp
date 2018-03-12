@@ -63,6 +63,7 @@ void TDScene::onInit() {
 	m_sky.onInit(TEXT("res\\sky.png"), 126.f);
 	m_box.onInit(std::string("res\\s"), 125.f);
 	m_disc.onInit(TEXT("res\\mesh\\disc.x"));
+	m_flock.onInit("res\\mesh\\flying_sparrow.x", D3DXVECTOR3(-75.f, 30.f, -75.f), D3DXVECTOR3(75.f, 90.f, 75.f));
 	m_terrain.onInit(TEXT("res\\tex.jpg"), TEXT("res\\hei.bmp"));
 	m_water.onInit("res\\water\\Water", ".png", 45, m_terrain.GetRadiusX(), m_terrain.GetRadiusZ());
 	m_welcome.onInit(D3DXVECTOR3(0.f, 4.5f, 0.f), TEXT("res\\welcome.png"));
@@ -78,6 +79,7 @@ void TDScene::onTick(float fElapsedTime) {
 	if (m_camera.onTick(fElapsedTime, &m_terrain)) m_grass.Add(
 		m_camera.GetCameraPosition(), m_camera.GetCameraDirection(), &m_terrain);
 	m_misc.onTick(fElapsedTime);
+	m_flock.onTick(fElapsedTime);
 	m_skeleton.onTick(fElapsedTime);
 	m_mirror.onTick(fElapsedTime);
 	m_model.onTick(fElapsedTime);
@@ -114,6 +116,7 @@ void TDScene::onRender() {
 	if (m_bWater) m_water.onRender();
 	m_welcome.onRender(m_camera.GetViewMatrix(), m_camera.GetCameraPosition());
 	m_grass.onRender(m_camera.GetViewMatrix(), m_camera.GetCameraPosition());
+	m_flock.onRender();
 	m_terrain.onRender();
 	if (m_bShadow) m_shadow.onRender();
 	m_mirror.onRender();

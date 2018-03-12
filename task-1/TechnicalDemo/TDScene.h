@@ -11,6 +11,7 @@
 #include "Water.h"
 #include "..\Engine\BaseCamera.h"
 #include "..\Engine\Billboard.h"
+#include "..\Engine\Flock.h"
 #include "..\Engine\SkeletonMesh.h"
 #include "..\Engine\Shadow.h"
 #include "..\Engine\Skybox.h"
@@ -39,6 +40,7 @@ private:
 	TDSimpleMirror m_mirror;
 	TDDisc m_disc;
 	CBillBoard m_welcome;
+	CFlock m_flock;
 	CShadow m_shadow;
 	CSkeletonMesh m_skeleton, m_model;
 	CSkyBox m_box;

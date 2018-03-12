@@ -20,7 +20,7 @@ CStaticMesh::~CStaticMesh()
 }
 
 
-bool CStaticMesh::onInit(const char* strFilePath, D3DXVECTOR3& vPos, float fScale, 
+bool CStaticMesh::onInit(const char* strFilePath, const D3DXVECTOR3& vPos, float fScale, 
 			D3DXVECTOR3& vRot, float fAngle) {
 	D3DXMATRIX mSca, mRot, mTra;
 	D3DXMatrixScaling(&mSca, fScale, fScale, fScale);
@@ -70,7 +70,7 @@ bool CStaticMesh::onInit(const char* strFilePath, ID3DXBuffer* pAdjacency, ID3DX
 	return true;
 }
 
-bool CStaticMesh::onInit(const char* strFilePath, D3DXVECTOR3& vPos, 
+bool CStaticMesh::onInit(const char* strFilePath, const D3DXVECTOR3& vPos, 
 		float fScale, float fYaw, float fPitch, float fRoll) {
 	D3DXMATRIX mSca, mRot, mTra;
 	D3DXMatrixScaling(&mSca, fScale, fScale, fScale);
